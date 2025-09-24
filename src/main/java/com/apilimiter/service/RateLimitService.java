@@ -28,7 +28,7 @@ public class RateLimitService {
 
         Long newCount = redisTemplate.opsForValue().increment(key, 1);
 
-        // Set expiry to end of day if this is the first request
+
         if (newCount == 1) {
             LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.MIDNIGHT);
             LocalDateTime now = LocalDateTime.now();

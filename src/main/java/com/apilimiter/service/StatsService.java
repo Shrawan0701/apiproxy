@@ -26,7 +26,7 @@ public class StatsService {
         stats.setTodayRequests(rateLimitService.getTodayCount(user));
         stats.setQuotaLimit(rateLimitService.getQuotaLimit());
 
-        // ✅ Safe conversion from Number → double
+
         Number avgLatencyNum = apiRequestRepository.findAverageLatencyByUser(user);
         stats.setAvgLatency(avgLatencyNum != null ? avgLatencyNum.doubleValue() : 0.0);
 
@@ -44,7 +44,7 @@ public class StatsService {
         List<StatsDto.DailyStats> history = new ArrayList<>();
 
         for (Object[] row : rawData) {
-            // ✅ Safe date conversion
+
             LocalDateTime date;
             Object rawDate = row[0];
             if (rawDate instanceof java.sql.Timestamp) {
@@ -57,7 +57,7 @@ public class StatsService {
                 throw new IllegalStateException("Unexpected date type: " + rawDate.getClass());
             }
 
-            // ✅ Safe numeric conversions
+
             long requestCount = ((Number) row[1]).longValue();
             double avgLatency = row[2] != null ? ((Number) row[2]).doubleValue() : 0.0;
             double errorRate = row[3] != null ? ((Number) row[3]).doubleValue() : 0.0;

@@ -36,7 +36,7 @@ public class ProxyService {
     public ProxyDto.ProxyResponse forwardRequest(User user, ProxyDto.ProxyRequest request) {
         long startTime = System.currentTimeMillis();
 
-        // Check rate limit
+
         if (!rateLimitService.isWithinLimit(user)) {
             ProxyDto.ProxyResponse response = new ProxyDto.ProxyResponse();
             response.setError("Rate limit exceeded");
@@ -46,7 +46,7 @@ public class ProxyService {
         }
 
         try {
-            // Build headers
+
             HttpHeaders headers = new HttpHeaders();
             if (request.getHeaders() != null && !request.getHeaders().isEmpty()) {
                 try {
@@ -58,7 +58,7 @@ public class ProxyService {
                 }
             }
 
-            // Make the request
+
             Mono<ResponseEntity<String>> responseMono = webClient
                 .method(HttpMethod.valueOf(request.getMethod().toUpperCase()))
                 .uri(request.getUrl())
@@ -71,14 +71,14 @@ public class ProxyService {
             ResponseEntity<String> responseEntity = responseMono.block();
             long latency = System.currentTimeMillis() - startTime;
 
-            // Increment request count
+
             rateLimitService.incrementAndGetCount(user);
 
-            // Log request
+
             logRequest(user, request.getUrl(), latency, true, 
                       responseEntity != null ? responseEntity.getStatusCode().value() : 200, null);
 
-            // Build response
+
             ProxyDto.ProxyResponse response = new ProxyDto.ProxyResponse();
             response.setData(parseResponseData(responseEntity != null ? responseEntity.getBody() : ""));
             response.setStatusCode(responseEntity != null ? responseEntity.getStatusCode().value() : 200);
@@ -90,13 +90,13 @@ public class ProxyService {
         } catch (WebClientResponseException e) {
             long latency = System.currentTimeMillis() - startTime;
 
-            // Increment request count even for errors
+
             rateLimitService.incrementAndGetCount(user);
 
-            // Log failed request
+
             logRequest(user, request.getUrl(), latency, false, e.getStatusCode().value(), e.getMessage());
 
-            // Build error response
+
             ProxyDto.ProxyResponse response = new ProxyDto.ProxyResponse();
             response.setError(e.getMessage());
             response.setStatusCode(e.getStatusCode().value());
@@ -108,13 +108,13 @@ public class ProxyService {
         } catch (Exception e) {
             long latency = System.currentTimeMillis() - startTime;
 
-            // Increment request count even for errors
+
             rateLimitService.incrementAndGetCount(user);
 
-            // Log failed request
+
             logRequest(user, request.getUrl(), latency, false, 500, e.getMessage());
 
-            // Build error response
+
             ProxyDto.ProxyResponse response = new ProxyDto.ProxyResponse();
             response.setError("Request failed: " + e.getMessage());
             response.setStatusCode(500);

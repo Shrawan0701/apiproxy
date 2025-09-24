@@ -18,7 +18,7 @@ public interface ApiRequestRepository extends JpaRepository<ApiRequest, Long> {
     @Query("SELECT COUNT(ar) FROM ApiRequest ar WHERE ar.user = :user AND ar.timestamp >= :start AND ar.timestamp < :end")
     long countByUserAndDateRange(@Param("user") User user, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    // ✅ Return Number instead of Double (avoids ClassCastException with Float/BigDecimal)
+
     @Query("SELECT AVG(ar.latency) FROM ApiRequest ar WHERE ar.user = :user")
     Number findAverageLatencyByUser(@Param("user") User user);
 
