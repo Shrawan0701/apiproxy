@@ -2,6 +2,7 @@ package com.apilimiter.config;
 
 import com.apilimiter.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -29,6 +30,10 @@ public class SecurityConfig {
     @Autowired
     @Lazy
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Value("${spring.web.cors.allowed-origins}")
+    private String allowedOrigins;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -58,7 +63,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of(allowedOrigins.split(",")));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
