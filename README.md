@@ -47,6 +47,9 @@ RateMate is a modern **API Limiter & Monitoring Platform** that helps developers
 - Data Insights: Get latency, error rates, and request count in one place.
 - Ready to Scale: Works locally or in production with no code changes.
 
+## Frontend Repo
+- **https://github.com/Shrawan0701/apiiproxy**
+
 ##  Roadmap
 
 - API Playground 
